@@ -9,6 +9,7 @@ public class Main
 				System.out.print(rand.nextInt(0, 9) + " ");
 			} System.out.println();
 		}
+		rand.newBytes();
 		rand.close();
 	}
 }

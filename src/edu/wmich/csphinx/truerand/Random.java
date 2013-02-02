@@ -16,7 +16,13 @@ public class Random
 	private long readpt, writept;
 	
 	public Random() throws IOException {
-		ram.seek(0);
+		if (ram.length() == 0) {
+			ram.writeLong(16);
+			ram.writeLong(0);
+			writept = 16;
+			newBytes();
+		}
+		ram.seek(0); 
 		readpt = ram.readLong();		// pointer for reading bytes
 		writept = ram.readLong();		// pointer for writing bytes
 		ram.seek(readpt);				// resume reading file
@@ -31,7 +37,7 @@ public class Random
 			try {						// get random byte from file
 				b = ram.readUnsignedByte();
 			} catch (EOFException e) {	// catch EOF, reset pointer
-				b = 255; ram.seek(16);	// and set b to maximum value
+				b = 256; ram.seek(16);	// and set b to maximum value
 			}							// so test will fail.
 		} while(b > x);					// if byte is greater than
 		readpt = ram.getFilePointer();	// allowable value, loop.
@@ -55,6 +61,7 @@ public class Random
 			while((line = buffer.readLine()) != null) {
 				bytes[i++] = (byte) Integer.parseInt(line.replaceAll("\\s+", ""), 2);
 			}
+			if (writept >= 25016) writept = 16;
 			ram.seek(writept);
 			ram.write(bytes);
 		} catch (Exception e) {
