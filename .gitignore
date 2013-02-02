@@ -9,3 +9,5 @@
 .classpath
 .project
 .settings
+*.sublime-workspace
+*.sublime-project
